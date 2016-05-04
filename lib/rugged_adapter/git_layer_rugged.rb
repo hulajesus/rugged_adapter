@@ -167,7 +167,7 @@ module Gollum
           blob = @repo.lookup(entry[:oid])
           count = 0
           blob.content.each_line do |line|
-            next unless line.match(/#{Regexp.escape(query)}/i)
+            next unless line.force_encoding('UTF-8').match(/#{Regexp.escape(query)}/i)
             count += 1
           end
           path = options[:path] ? ::File.join(options[:path], root, entry[:name]) : "#{root}#{entry[:name]}"
@@ -237,7 +237,7 @@ module Gollum
         tree = @repo.lookup(tree[options[:path]][:oid]) if options[:path]
         results = []
         tree.walk_blobs do |root, blob|
-          next unless blob[:name] =~ /#{query}/
+          next unless blob[:name].force_encoding('UTF-8') =~ /#{query}/
           path = options[:path] ? ::File.join(options[:path], root, blob[:name]) : "#{root}#{blob[:name]}"
           results << path
         end
